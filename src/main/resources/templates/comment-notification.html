@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .button {
+            background-color: #1a73e8;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .comment-box {
+            border-left: 4px solid #ddd;
+            padding-left: 15px;
+            font-style: italic;
+            color: #555;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<p>Chào bạn,</p>
+<p><strong th:text="${authorName}"></strong> đã để lại một nhận xét mới:</p>
+
+<div class="comment-box">
+    <p th:text="${content}"></p>
+</div>
+
+<p>Để xem hoặc trả lời nhận xét này, vui lòng nhấn vào nút bên dưới:</p>
+<a th:href="${detailUrl}" class="button">Trả lời nhận xét</a>
+
+<p style="font-size: 0.8em; color: #888;">Trân trọng,<br>Đội ngũ G-class</p>
+</body>
+</html>
