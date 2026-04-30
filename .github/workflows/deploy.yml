@@ -37,6 +37,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/gclass-frontend:latest
           build-args: |
             VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
+            VITE_API_BASE_URL=https://gclass.io.vn/G-class
 
   deploy:
     needs: build-and-push
