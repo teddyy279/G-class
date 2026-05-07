@@ -1,6 +1,7 @@
 package com.edu.G_class.common.exception;
 
 
+import com.google.api.Http;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -49,7 +50,7 @@ public enum ErrorCode {
     CANNOT_GRADE_OWN_SUBMISSION(1038, "Teachers cannot grade their own submission", HttpStatus.BAD_REQUEST),
     NOT_A_STUDENT(1039, "Only students can submit assignments", HttpStatus.FORBIDDEN),
     COMMENT_NOT_FOUND(1040, "Comment not found", HttpStatus.NOT_FOUND),
-
+    INVALID_DUE_DATE(1041, "Due date must be in the future", HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

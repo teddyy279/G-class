@@ -159,11 +159,26 @@ export default function CreateClassworkPage() {
     setForm(p => ({ ...p, attachmentIds: p.attachmentIds.filter(id => id !== attToRemove.id) }));
   };
 
+  // Tính min datetime-local string (giờ hiện tại, bỏ giây/ms)
+  const getNowLocalMin = () => {
+    const now = new Date();
+    now.setSeconds(0, 0);
+    // Format: YYYY-MM-DDTHH:MM
+    const pad = n => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  };
+
+  const isDueDateInPast = form.dueDate && new Date(form.dueDate) <= new Date();
+
   const handleSubmit = async (e) => {
     e?.preventDefault();
     if (loading) return; // Tránh bấm nhiều lần
     if (!form.title.trim()) { toast.error('Vui lòng nhập tiêu đề!'); return; }
-    
+    if (isDueDateInPast) {
+      toast.error('Hạn nộp phải sau thời điểm hiện tại!');
+      return;
+    }
+
     setLoading(true);
     try {
       const payload = {
@@ -228,7 +243,7 @@ export default function CreateClassworkPage() {
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-500">Đã lưu</span>
           <div className="flex items-center">
-            <button onClick={() => handleSubmit()} disabled={loading || !form.title.trim()} 
+            <button onClick={() => handleSubmit()} disabled={loading || !form.title.trim() || isDueDateInPast} 
               className="px-6 py-2 bg-[#0b57d0] text-white text-sm font-medium rounded-l-md hover:bg-[#084298] disabled:opacity-50 transition-colors">
               {loading ? 'Đang lưu...' : meta.actionLabel}
             </button>
@@ -459,10 +474,23 @@ export default function CreateClassworkPage() {
               <label className="block text-xs font-medium text-gray-600 mb-1">Hạn nộp</label>
               <input 
                 type="datetime-local" 
-                value={form.dueDate} 
+                value={form.dueDate}
+                min={getNowLocalMin()}
                 onChange={e => setForm(p => ({ ...p, dueDate: e.target.value }))}
-                className="w-full border border-gray-300 rounded p-2 text-sm focus:outline-none focus:border-[#0b57d0] hover:bg-gray-50"
+                className={`w-full border rounded p-2 text-sm focus:outline-none hover:bg-gray-50 transition-colors ${
+                  isDueDateInPast
+                    ? 'border-red-400 focus:border-red-500 bg-red-50 text-red-700'
+                    : 'border-gray-300 focus:border-[#0b57d0]'
+                }`}
               />
+              {isDueDateInPast && (
+                <p className="mt-1 text-xs text-red-600 flex items-center gap-1">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                  </svg>
+                  Hạn nộp phải sau thời điểm hiện tại
+                </p>
+              )}
             </div>
           )}
 

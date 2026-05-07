@@ -17,6 +17,6 @@ public class AssignmentHandler implements ClassworkHandler {
     @Override
     public void handle(Classwork classwork, ClassworkRequest request) {
         classwork.setMaxPoints(request.maxPoints() != null ? request.maxPoints() : 100);
-        classwork.setDueDate(request.dueDate());
+        validateDueDate(request.dueDate());
     }
 }
