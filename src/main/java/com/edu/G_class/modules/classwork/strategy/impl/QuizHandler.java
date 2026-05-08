@@ -16,8 +16,8 @@ public class QuizHandler implements ClassworkHandler {
 
     @Override
     public void handle(Classwork classwork, ClassworkRequest request) {
-        //classwork.setDueDate(request.dueDate());
         validateDueDate(request.dueDate());
+        classwork.setDueDate(request.dueDate());
         classwork.setMaxPoints(request.maxPoints() != null ? request.maxPoints() : 100);
         classwork.setExternalLink(request.externalLink());
     }

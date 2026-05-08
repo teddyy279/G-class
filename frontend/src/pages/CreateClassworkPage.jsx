@@ -159,15 +159,8 @@ export default function CreateClassworkPage() {
     setForm(p => ({ ...p, attachmentIds: p.attachmentIds.filter(id => id !== attToRemove.id) }));
   };
 
-  // Tính min datetime-local string (giờ hiện tại, bỏ giây/ms)
-  const getNowLocalMin = () => {
-    const now = new Date();
-    now.setSeconds(0, 0);
-    // Format: YYYY-MM-DDTHH:MM
-    const pad = n => String(n).padStart(2, '0');
-    return `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-  };
-
+  // isDueDateInPast: so sánh trực tiếp string datetime-local với giờ hiện tại
+  // form.dueDate có format "YYYY-MM-DDTHH:MM" — new Date() parse đúng theo giờ địa phương
   const isDueDateInPast = form.dueDate && new Date(form.dueDate) <= new Date();
 
   const handleSubmit = async (e) => {
@@ -185,7 +178,8 @@ export default function CreateClassworkPage() {
         title: form.title,
         description: form.description,
         type: form.type,
-        dueDate: form.dueDate ? new Date(form.dueDate).toISOString() : null,
+        // Gửi string "YYYY-MM-DDTHH:MM" trực tiếp — tránh toISOString() chuyển sang UTC làm lệch 7 giờ
+        dueDate: form.dueDate || null,
         maxPoints: form.type === 'MATERIAL' ? null : form.maxPoints,
         topicId: form.topicId || null,
         questionType: form.type === 'QUESTION' ? form.questionType : null,
@@ -475,7 +469,6 @@ export default function CreateClassworkPage() {
               <input 
                 type="datetime-local" 
                 value={form.dueDate}
-                min={getNowLocalMin()}
                 onChange={e => setForm(p => ({ ...p, dueDate: e.target.value }))}
                 className={`w-full border rounded p-2 text-sm focus:outline-none hover:bg-gray-50 transition-colors ${
                   isDueDateInPast

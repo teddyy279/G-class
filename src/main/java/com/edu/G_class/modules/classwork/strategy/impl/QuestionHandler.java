@@ -25,8 +25,8 @@ public class QuestionHandler implements ClassworkHandler {
 
     @Override
     public void handle(Classwork classwork, ClassworkRequest request) {
-        //classwork.setDueDate(request.dueDate());
         validateDueDate(request.dueDate());
+        classwork.setDueDate(request.dueDate());
         classwork.setQuestionType(request.questionType());
         classwork.setCanReply(request.canReply());
         classwork.setCanEditAnswer(request.canEditAnswer());
